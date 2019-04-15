@@ -6,10 +6,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Favorites">
+    tools:context=".Generate">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view_favorites"
+        android:id="@+id/recycler_view_generate"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginStart="8dp"
