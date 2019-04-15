@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context=".LoginFragment"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/text_view_login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Login First"
+        android:textSize="25sp"
+        android:textAlignment="center" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="3dip"
+        android:layout_marginBottom="30sp"
+        android:background="@color/cardview_shadow_start_color" />
+
+    <EditText
+        android:id="@+id/edit_text_login_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Enter your username..."
+        android:inputType="textPersonName"
+        android:textAlignment="center" />
+
+    <EditText
+        android:id="@+id/edit_text_login_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Enter your password..."
+        android:inputType="textPassword"
+        android:textAlignment="center" />
+
+    <Button
+        android:id="@+id/button_login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30sp"
+        android:text="Login"
+        android:textAlignment="center" />
+
+</LinearLayout>
