@@ -1,6 +1,8 @@
 package com.lambdaschool.build_week3_simpsons_says;
 
 import android.os.Environment;
+import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -110,10 +112,9 @@ public class DataAccessObject {
                 mockDataStringArray[i] = mockDataStringArray[i].replace(", ", " ");
             }
             String[] eachLine = mockDataStringArray[i].split(",");
-            //for (int j = 0; j < eachLine.length; ++j) {
                 Quote quote = new Quote(Integer.parseInt(eachLine[0]), eachLine[7], eachLine[9]);
                 quoteArrayList.add(quote);
-            //}
+
         }
         return quoteArrayList;
 

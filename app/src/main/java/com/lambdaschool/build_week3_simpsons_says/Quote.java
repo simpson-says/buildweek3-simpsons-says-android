@@ -1,5 +1,7 @@
 package com.lambdaschool.build_week3_simpsons_says;
 
+import android.support.annotation.NonNull;
+
 public class Quote {
     private int id;
     private String Character;
@@ -33,5 +35,11 @@ public class Quote {
 
     public void setQuote(String quote) {
         this.quote = quote;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return String.format("%s: %s", getCharacter(), getQuote());
     }
 }
