@@ -1,8 +1,14 @@
 package com.lambdaschool.build_week3_simpsons_says;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -94,5 +100,85 @@ public class NetworkAdapter {
             }
         }
         return httpResult;
+    }
+
+    public static Bitmap httpImageRequest(String url) {
+        Bitmap httpImageResult = null;
+        InputStream inputStream = null;
+        HttpURLConnection httpURLConnection = null;
+
+        try {
+            URL urlObject = new URL(url);
+            httpURLConnection = (HttpURLConnection) urlObject.openConnection();
+            httpURLConnection.setReadTimeout(READ_TIMEOUT);
+            httpURLConnection.setConnectTimeout(CONNECT_TIMEOUT);
+            httpURLConnection.connect();
+            int responseCode = httpURLConnection.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                inputStream = httpURLConnection.getInputStream();
+                httpImageResult = BitmapFactory.decodeStream(inputStream);
+            } else {
+                throw new IOException("Connection failed (" + responseCode + ")");
+            }
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (httpURLConnection != null) {
+                httpURLConnection.disconnect();
+            }
+        }
+        return httpImageResult;
+    }
+
+    public static String fileParse(String path, String filename) {
+        String fileParseResults = null;
+        File file = null;
+        FileInputStream fileInputStream = null;
+        InputStreamReader inputStreamReader = null;
+        BufferedReader bufferedReader = null;
+
+        try {
+            file = new File(path, filename);
+            boolean ex=file.exists();
+            fileInputStream = new FileInputStream(file);
+            inputStreamReader = new InputStreamReader(fileInputStream);
+            bufferedReader = new BufferedReader(inputStreamReader);
+            StringBuilder stringBuilder = new StringBuilder();
+
+            while ((fileParseResults = bufferedReader.readLine()) != null) {
+                stringBuilder.append(fileParseResults).append(System.getProperty("line.separator"));
+            }
+            fileParseResults = stringBuilder.toString();
+
+            bufferedReader.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (fileInputStream != null) {
+                    fileInputStream.close();
+                }
+                if (inputStreamReader != null) {
+                    inputStreamReader.close();
+                }
+                if (bufferedReader != null) {
+                    bufferedReader.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return fileParseResults;
     }
 }
