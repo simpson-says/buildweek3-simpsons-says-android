@@ -33,7 +33,7 @@ public class Search extends AppCompatActivity implements DetailsFragment.OnFragm
                 DetailsFragment.OnFragmentInteractionListener interactionListener = (DetailsFragment.OnFragmentInteractionListener) context; //TODO: Delete this and get proper handle
                 RecyclerView recyclerView = findViewById(R.id.recycler_view_search_results);
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
-                SearchListAdapter searchListAdapter = new SearchListAdapter(quoteArrayList, interactionListener);
+                SearchListAdapter searchListAdapter = new SearchListAdapter(quoteArrayList, interactionListener); //TODO: Replace this variable with the proper interactionListener
                 recyclerView.setAdapter(searchListAdapter);
                 recyclerView.setHasFixedSize(true);
             }

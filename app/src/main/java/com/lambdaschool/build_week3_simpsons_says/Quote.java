@@ -6,12 +6,15 @@ import java.io.Serializable;
 
 public class Quote implements Serializable {
     private int id;
-    private String Character;
+    private String character;
     private String quote;
+    private int season;
+    private int episode;
+    private String title;
 
     public Quote(int id, String character, String quote) {
         this.id = id;
-        Character = character;
+        this.character = character;
         this.quote = quote;
     }
 
@@ -24,11 +27,11 @@ public class Quote implements Serializable {
     }
 
     public String getCharacter() {
-        return Character;
+        return character;
     }
 
     public void setCharacter(String character) {
-        Character = character;
+        this.character = character;
     }
 
     public String getQuote() {
@@ -37,6 +40,30 @@ public class Quote implements Serializable {
 
     public void setQuote(String quote) {
         this.quote = quote;
+    }
+
+    public int getSeason() {
+        return season;
+    }
+
+    public void setSeason(int season) {
+        this.season = season;
+    }
+
+    public int getEpisode() {
+        return episode;
+    }
+
+    public void setEpisode(int episode) {
+        this.episode = episode;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     @NonNull

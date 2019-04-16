@@ -9,6 +9,51 @@ import java.util.ArrayList;
 
 public class DataAccessObject {
 
+    /* ENDPOINTS
+    Post to /register
+    Params: Username and password
+
+    Post to /login
+    Params: Username and password
+
+    Get to /favorites
+    You will retrieve all these from the db and put them in array for sending out, but not for returning to user
+    Header should provide username from auth unless you want this done different
+
+    Post to /favorites
+    Params: an id number to add to the users favorites
+    header should provide username from auth unless you want this done different
+
+    Post to /search
+    Params: a string to search
+    This should be behind an auth header
+
+    (THIS PART IS STRETCH DON'T WORRY ABOUT THIS UNTIL THE END)
+    Post to /generator
+    params: a string to pass on
+    This should be behind an auth header*/
+    public ArrayList<Quote> getData() {
+        ArrayList<Quote> quoteArrayList = new ArrayList<>();
+        String[] mockDataStringArray = mockData.split("\n");
+        for (int i = 0; i < mockDataStringArray.length; ++i) {
+            if (mockDataStringArray[i].contains(", ")) {
+                mockDataStringArray[i] = mockDataStringArray[i].replace(", ", " ");
+            }
+            String[] eachLine = mockDataStringArray[i].split(",");
+                Quote quote = new Quote(Integer.parseInt(eachLine[0]), eachLine[7], eachLine[9]);
+                quoteArrayList.add(quote);
+
+        }
+        return quoteArrayList;
+
+/*        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String contents = NetworkAdapter.fileParse(Environment.getDataDirectory().getPath(), "simpsons_quotes_paired.csv");
+            }
+        }).start();*/
+    }
+
     private String mockData = "0,32,209,\"Miss Hoover: No, actually, it was a little of both. Sometimes when a disease is in all the magazines and all the news shows, it's only natural that you think you have it.\",TRUE,464,3,Miss Hoover,Springfield Elementary School,\"No, actually, it was a little of both. Sometimes when a disease is in all the magazines and all the news shows, it's only natural that you think you have it.\"\n" +
             "1,32,210,Lisa Simpson: (NEAR TEARS) Where's Mr. Bergstrom?,TRUE,9,3,Lisa Simpson,Springfield Elementary School,Where's Mr. Bergstrom?\n" +
             "2,32,211,Miss Hoover: I don't know. Although I'd sure like to talk to him. He didn't touch my lesson plan. What did he teach you?,TRUE,464,3,Miss Hoover,Springfield Elementary School,I don't know. Although I'd sure like to talk to him. He didn't touch my lesson plan. What did he teach you?\n" +
@@ -103,26 +148,4 @@ public class DataAccessObject {
             "98,32,302,\"Homer Simpson: Hey son, would you have gotten any money for being class president?\",TRUE,2,5,Homer Simpson,Simpson Home,\"Hey son, would you have gotten any money for being class president?\"\n" +
             "99,32,303,Bart Simpson: No.,TRUE,8,5,Bart Simpson,Simpson Home,No.\n" +
             "100,32,304,Homer Simpson: Would you have to do extra work?,TRUE,2,5,Homer Simpson,Simpson Home,Would you have to do extra work?\n";
-
-    public ArrayList<Quote> getData() {
-        ArrayList<Quote> quoteArrayList = new ArrayList<>();
-        String[] mockDataStringArray = mockData.split("\n");
-        for (int i = 0; i < mockDataStringArray.length; ++i) {
-            if (mockDataStringArray[i].contains(", ")) {
-                mockDataStringArray[i] = mockDataStringArray[i].replace(", ", " ");
-            }
-            String[] eachLine = mockDataStringArray[i].split(",");
-                Quote quote = new Quote(Integer.parseInt(eachLine[0]), eachLine[7], eachLine[9]);
-                quoteArrayList.add(quote);
-
-        }
-        return quoteArrayList;
-
-/*        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                String contents = NetworkAdapter.fileParse(Environment.getDataDirectory().getPath(), "simpsons_quotes_paired.csv");
-            }
-        }).start();*/
-    }
 }
