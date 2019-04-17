@@ -28,7 +28,7 @@ public class FavoritesListAdapter extends RecyclerView.Adapter<FavoritesListAdap
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
         final Quote quote = quoteArrayList.get(position);
-        viewHolder.imageViewQuote.setImageResource(R.drawable.placeholder);
+        viewHolder.imageViewQuote.setImageResource(quote.getImage());
         viewHolder.textViewQuote.setText(quote.toString());
         viewHolder.viewParent.setOnClickListener(new View.OnClickListener() {
             @Override

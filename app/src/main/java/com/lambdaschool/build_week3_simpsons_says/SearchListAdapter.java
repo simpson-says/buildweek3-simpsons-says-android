@@ -31,7 +31,7 @@ public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.Vi
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int position) {
         final Quote quote = quoteArrayList.get(position);
-        viewHolder.imageViewQuote.setImageResource(R.drawable.placeholder);
+        viewHolder.imageViewQuote.setImageResource(quote.getImage());
         viewHolder.textViewQuote.setText(quote.toString());
         viewHolder.viewParent.setOnClickListener(new View.OnClickListener() {
             @Override

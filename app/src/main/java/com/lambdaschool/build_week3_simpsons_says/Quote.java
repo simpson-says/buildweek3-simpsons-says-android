@@ -7,6 +7,7 @@ import android.text.SpannableStringBuilder;
 
 import java.io.Serializable;
 import java.util.Locale;
+import java.util.Random;
 
 public class Quote implements Serializable {
     private int id;
@@ -15,6 +16,7 @@ public class Quote implements Serializable {
     private String title;
     private int season;
     private int episode;
+    private int image;
 
     public Quote(int id, String character, String quote, String title, int season, int episode) {
         this.id = id;
@@ -23,6 +25,38 @@ public class Quote implements Serializable {
         this.title = title;
         this.season = season;
         this.episode = episode;
+        this.image = assignImage(character);
+    }
+
+    private int assignImage(String character) {
+        int drawableImage = -1;
+
+        for (int i = 0; i < ImageConstants.PORTRAIT_NAMES.length; ++i) {
+            if (character.toLowerCase().startsWith(ImageConstants.PORTRAIT_NAMES[i]))
+                drawableImage = ImageConstants.PORTRAIT_DRAWABLES[i];
+        }
+
+        if (drawableImage == -1) {
+            switch (new Random().nextInt(4)) {
+                case 0:
+                    drawableImage = ImageConstants.DEFAULT_DRAWABLES[0];
+                    break;
+                case 1:
+                    drawableImage = ImageConstants.DEFAULT_DRAWABLES[1];
+                    break;
+                case 2:
+                    drawableImage = ImageConstants.DEFAULT_DRAWABLES[2];
+                    break;
+                case 3:
+                    drawableImage = ImageConstants.DEFAULT_DRAWABLES[3];
+                    break;
+                default:
+                    drawableImage = ImageConstants.DEFAULT_DRAWABLES[0];
+                    break;
+            }
+        }
+
+        return drawableImage;
     }
 
     public int getId() {
@@ -71,6 +105,10 @@ public class Quote implements Serializable {
 
     public void setEpisode(int episode) {
         this.episode = episode;
+    }
+
+    public int getImage() {
+        return image;
     }
 
     public SpannableStringBuilder toVerboseString() {

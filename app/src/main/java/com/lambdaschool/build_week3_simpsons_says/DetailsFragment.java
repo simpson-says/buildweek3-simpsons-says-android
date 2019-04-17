@@ -63,7 +63,7 @@ public class DetailsFragment extends DialogFragment {
         if (quote != null) {
             //rootView.setBackgroundColor(Color.YELLOW);
             ImageView imageViewQuote = rootView.findViewById(R.id.image_view_fragment_details_portrait);
-            imageViewQuote.setImageResource(R.drawable.placeholder);
+            imageViewQuote.setImageResource(quote.getImage());
             TextView textViewQuote = rootView.findViewById(R.id.text_view_fragment_details);
             textViewQuote.setText(quote.toVerboseString());
         }
