@@ -19,10 +19,10 @@ import java.net.URL;
 import java.util.Map;
 
 public class NetworkAdapter {
-    private static final String REQUEST_GET = "GET";
-    private static final String REQUEST_POST = "POST";
-    private static final String REQUEST_PUT = "PUT";
-    private static final String REQUEST_DELETE = "DELETE";
+    static final String REQUEST_GET = "GET";
+    static final String REQUEST_POST = "POST";
+    static final String REQUEST_PUT = "PUT";
+    static final String REQUEST_DELETE = "DELETE";
     private static final int READ_TIMEOUT = 3000;
     private static final int CONNECT_TIMEOUT = 3000;
 

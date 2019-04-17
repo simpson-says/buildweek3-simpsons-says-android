@@ -1,24 +1,28 @@
 package com.lambdaschool.build_week3_simpsons_says;
 
-import android.graphics.Bitmap;
-import android.os.Environment;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DataAccessObject {
-    private static final String URL_SIMPSONS_SAYS_BASE = "https://simpsonssays.herokuapp.com/";
+    private static final String URL_SIMPSONS_SAYS_BASE = "https://simpson-says-backend.herokuapp.com/api/";
     private static final String URL_SIMPSONS_SAYS_REGISTER = "register";
     private static final String URL_SIMPSONS_SAYS_LOGIN = "login";
     private static final String URL_SIMPSONS_SAYS_FAVORITES = "favorites";
     private static final String URL_SIMPSONS_SAYS_SEARCH = "search";
     private static final String URL_SIMPSONS_SAYS_GENERATE = "generator";
+    static final String RESPONSE_MESSAGE_ERROR_PREFIX = "Error: ";
+    private HashMap<String, String> headerPropertiesHashMap;
+    private String returnedJsonAsString;
+    private String messageToReturn;
+
+    public static String loginUsername;
+    public static String loginPassword;
+
 
     /* ENDPOINTS
     Post to /register
@@ -43,9 +47,10 @@ public class DataAccessObject {
     Post to /generator
     params: a string to pass on
     This should be behind an auth header*/
-    public ArrayList<Quote> getData() {
+
+    public ArrayList<Quote> getHardCodedData() {
         ArrayList<Quote> quoteArrayList = new ArrayList<>();
-        String[] mockDataStringArray = mockData.split("\n");
+        String[] mockDataStringArray = MOCK_CSV.split("\n");
         for (int i = 0; i < mockDataStringArray.length; ++i) {
             if (mockDataStringArray[i].contains(", ")) {
                 mockDataStringArray[i] = mockDataStringArray[i].replace(", ", " ");
@@ -64,8 +69,158 @@ public class DataAccessObject {
         }).start();*/
     }
 
+    public String userRegister() {
+        messageToReturn = null;
+
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+
+                JSONObject jsonObject = null;
+
+                try {
+                    jsonObject = new JSONObject();
+                    jsonObject.put("username", loginUsername);
+                    jsonObject.put("password", loginPassword);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                headerPropertiesHashMap = new HashMap<>();
+                headerPropertiesHashMap.put("Content-Type", "application/json");
+                returnedJsonAsString = NetworkAdapter.httpRequest(URL_SIMPSONS_SAYS_BASE + URL_SIMPSONS_SAYS_REGISTER, NetworkAdapter.REQUEST_POST, jsonObject, headerPropertiesHashMap);
+
+                try {
+                    jsonObject = new JSONObject(returnedJsonAsString);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                int responseId = -1;
+                try {
+                    responseId = jsonObject.getInt("id");
+                    messageToReturn = String.valueOf(responseId);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                String responseUsername = null;
+                try {
+                    responseUsername = jsonObject.getString("username");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                String responseRole = null;
+                try {
+                    responseRole = jsonObject.getString("role");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                String responseMessage = null;
+                try {
+                    responseMessage = jsonObject.getString("message");
+                    messageToReturn = RESPONSE_MESSAGE_ERROR_PREFIX + responseMessage;
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        Thread thread = new Thread(runnable);
+        thread.start();
+
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return messageToReturn;
+    }
+
+    public String userLogin() {
+        messageToReturn = null;
+
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+
+                JSONObject jsonObject = null;
+
+                try {
+                    jsonObject = new JSONObject();
+                    jsonObject.put("username", loginUsername);
+                    jsonObject.put("password", loginPassword);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                headerPropertiesHashMap = new HashMap<>();
+                headerPropertiesHashMap.put("Content-Type", "application/json");
+                returnedJsonAsString = NetworkAdapter.httpRequest(URL_SIMPSONS_SAYS_BASE + URL_SIMPSONS_SAYS_LOGIN, NetworkAdapter.REQUEST_POST, jsonObject, headerPropertiesHashMap);
+
+                try {
+                    jsonObject = new JSONObject(returnedJsonAsString);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                String responseToken = null;
+                try {
+                    responseToken = jsonObject.getString("token");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                String responseMessage = null;
+                try {
+                    responseMessage = jsonObject.getString("message");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                if (responseToken != null)
+                    messageToReturn = responseToken;
+                else if (responseMessage != null)
+                    messageToReturn = RESPONSE_MESSAGE_ERROR_PREFIX + responseMessage;
+            }
+        };
+
+        Thread thread = new Thread(runnable);
+        thread.start();
+
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+
+        return messageToReturn;
+    }
+
     public ArrayList<Quote> getQuotes() {
-        String returnedJsonAsString = NetworkAdapter.httpRequest(URL_SIMPSONS_SAYS_BASE + URL_SIMPSONS_SAYS_SEARCH);
+
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                returnedJsonAsString = NetworkAdapter.httpRequest(URL_SIMPSONS_SAYS_BASE + URL_SIMPSONS_SAYS_SEARCH);
+            }
+        };
+
+        Thread thread = new Thread(runnable);
+        thread.start();
+
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         ArrayList<Quote> quoteArrayList = new ArrayList<>();
         Quote quote = null;
         JSONObject jsonObject = null;
@@ -94,10 +249,9 @@ public class DataAccessObject {
         return quoteArrayList;
     }
 
-    String mockJson1 = "{'quote_id': 9552, 'raw_character_text': 'Lisa Simpson', 'spoken_words': 'That life is worth living.', 'episode_title': \"Lisa's Substitute\", 'season': 2, 'number_in_season': 19} ";
-    String mockJson2 = "[{'quote_id': 9549, 'raw_character_text': 'Miss Hoover', 'spoken_words': \"No, actually, it was a little of both. Sometimes when a disease is in all the magazines and all the news shows, it's only natural that you think you have it.\", 'episode_title': \"Lisa's Substitute\", 'season': 2, 'number_in_season': 19}, {'quote_id': 9550, 'raw_character_text': 'Lisa Simpson', 'spoken_words': \"Where's Mr. Bergstrom?\", 'episode_title': \"Lisa's Substitute\", 'season': 2, 'number_in_season': 19}, {'quote_id': 9551, 'raw_character_text': 'Miss Hoover', 'spoken_words': \"I don't know. Although I'd sure like to talk to him. He didn't touch my lesson plan. What did he teach you?\", 'episode_title': \"Lisa's Substitute\", 'season': 2, 'number_in_season': 19}, {'quote_id': 9552, 'raw_character_text': 'Lisa Simpson', 'spoken_words': 'That life is worth living.', 'episode_title': \"Lisa's Substitute\", 'season': 2, 'number_in_season': 19}]";
-
-    private String mockData = "0,32,209,\"Miss Hoover: No, actually, it was a little of both. Sometimes when a disease is in all the magazines and all the news shows, it's only natural that you think you have it.\",TRUE,464,3,Miss Hoover,Springfield Elementary School,\"No, actually, it was a little of both. Sometimes when a disease is in all the magazines and all the news shows, it's only natural that you think you have it.\"\n" +
+    private static final String MOCK_JSON_1 = "{'quote_id': 9552, 'raw_character_text': 'Lisa Simpson', 'spoken_words': 'That life is worth living.', 'episode_title': \"Lisa's Substitute\", 'season': 2, 'number_in_season': 19} ";
+    private static final String MOCK_JSON_2 = "[{'quote_id': 9549, 'raw_character_text': 'Miss Hoover', 'spoken_words': \"No, actually, it was a little of both. Sometimes when a disease is in all the magazines and all the news shows, it's only natural that you think you have it.\", 'episode_title': \"Lisa's Substitute\", 'season': 2, 'number_in_season': 19}, {'quote_id': 9550, 'raw_character_text': 'Lisa Simpson', 'spoken_words': \"Where's Mr. Bergstrom?\", 'episode_title': \"Lisa's Substitute\", 'season': 2, 'number_in_season': 19}, {'quote_id': 9551, 'raw_character_text': 'Miss Hoover', 'spoken_words': \"I don't know. Although I'd sure like to talk to him. He didn't touch my lesson plan. What did he teach you?\", 'episode_title': \"Lisa's Substitute\", 'season': 2, 'number_in_season': 19}, {'quote_id': 9552, 'raw_character_text': 'Lisa Simpson', 'spoken_words': 'That life is worth living.', 'episode_title': \"Lisa's Substitute\", 'season': 2, 'number_in_season': 19}]";
+    private static final String MOCK_CSV = "0,32,209,\"Miss Hoover: No, actually, it was a little of both. Sometimes when a disease is in all the magazines and all the news shows, it's only natural that you think you have it.\",TRUE,464,3,Miss Hoover,Springfield Elementary School,\"No, actually, it was a little of both. Sometimes when a disease is in all the magazines and all the news shows, it's only natural that you think you have it.\"\n" +
             "1,32,210,Lisa Simpson: (NEAR TEARS) Where's Mr. Bergstrom?,TRUE,9,3,Lisa Simpson,Springfield Elementary School,Where's Mr. Bergstrom?\n" +
             "2,32,211,Miss Hoover: I don't know. Although I'd sure like to talk to him. He didn't touch my lesson plan. What did he teach you?,TRUE,464,3,Miss Hoover,Springfield Elementary School,I don't know. Although I'd sure like to talk to him. He didn't touch my lesson plan. What did he teach you?\n" +
             "3,32,212,Lisa Simpson: That life is worth living.,TRUE,9,3,Lisa Simpson,Springfield Elementary School,That life is worth living.\n" +

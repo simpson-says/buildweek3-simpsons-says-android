@@ -24,7 +24,7 @@ public class Search extends AppCompatActivity implements DetailsFragment.OnFragm
             @Override
             public void onClick(View v) {
                 DataAccessObject dao = new DataAccessObject();
-                ArrayList<Quote> quoteArrayList = dao.getData();
+                ArrayList<Quote> quoteArrayList = dao.getHardCodedData();
                 DetailsFragment.OnFragmentInteractionListener interactionListener = (DetailsFragment.OnFragmentInteractionListener) context; //TODO: Delete this and get proper handle
                 RecyclerView recyclerView = findViewById(R.id.recycler_view_search_results);
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));

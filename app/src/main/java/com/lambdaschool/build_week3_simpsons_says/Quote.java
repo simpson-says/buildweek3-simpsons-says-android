@@ -10,6 +10,8 @@ import java.util.Locale;
 import java.util.Random;
 
 public class Quote implements Serializable {
+    public static final int INVALID_DEFAULT_DRAWABLE_IMAGE = -1;
+
     private int id;
     private String character;
     private String quote;
@@ -29,15 +31,15 @@ public class Quote implements Serializable {
     }
 
     private int assignImage(String character) {
-        int drawableImage = -1;
+        int drawableImage = INVALID_DEFAULT_DRAWABLE_IMAGE;
 
         for (int i = 0; i < ImageConstants.PORTRAIT_NAMES.length; ++i) {
             if (character.toLowerCase().startsWith(ImageConstants.PORTRAIT_NAMES[i]))
                 drawableImage = ImageConstants.PORTRAIT_DRAWABLES[i];
         }
 
-        if (drawableImage == -1) {
-            switch (new Random().nextInt(4)) {
+        if (drawableImage == INVALID_DEFAULT_DRAWABLE_IMAGE) {
+            switch (new Random().nextInt(ImageConstants.DEFAULT_DRAWABLES.length)) {
                 case 0:
                     drawableImage = ImageConstants.DEFAULT_DRAWABLES[0];
                     break;

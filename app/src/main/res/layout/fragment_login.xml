@@ -12,7 +12,7 @@
         android:id="@+id/text_view_login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Login First"
+        android:text="@string/login_message_default"
         android:textSize="25sp"
         android:textAlignment="center" />
 
@@ -21,6 +21,16 @@
         android:layout_height="3dip"
         android:layout_marginBottom="30sp"
         android:background="@color/cardview_shadow_start_color" />
+
+    <Switch
+        android:id="@+id/switch_login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:checked="false"
+        android:showText="false"
+        android:text="@string/login_existing_account"
+        android:textAlignment="center"
+        tools:checked="false" />
 
     <EditText
         android:id="@+id/edit_text_login_name"

@@ -16,7 +16,7 @@ public class Favorites extends AppCompatActivity implements DetailsFragment.OnFr
         setContentView(R.layout.activity_favorites);
 
         DataAccessObject dao = new DataAccessObject();
-        ArrayList<Quote> quoteArrayList = dao.getData();
+        ArrayList<Quote> quoteArrayList = dao.getHardCodedData();
         DetailsFragment.OnFragmentInteractionListener interactionListener = this; //TODO: Delete this and get proper handle
         RecyclerView recyclerView = findViewById(R.id.recycler_view_favorites);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

@@ -1,12 +1,17 @@
 package com.lambdaschool.build_week3_simpsons_says;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.Switch;
+import android.widget.TextView;
 
 
 /**
@@ -17,15 +22,10 @@ import android.view.ViewGroup;
  * Use the {@link LoginFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class LoginFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+public class LoginFragment extends DialogFragment {
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    public static final String ARG_PARAM = "login";
+    private String paramUsername;
 
     private OnFragmentInteractionListener mListener;
 
@@ -33,20 +33,10 @@ public class LoginFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment LoginFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static LoginFragment newInstance(String param1, String param2) {
+    public static LoginFragment newInstance(String param1) {
         LoginFragment fragment = new LoginFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_PARAM, param1);
         fragment.setArguments(args);
         return fragment;
     }
@@ -54,34 +44,107 @@ public class LoginFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            paramUsername = getArguments().getString(ARG_PARAM);
         }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_login, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        final View rootView = inflater.inflate(R.layout.fragment_login, container, false);
+
+        final Switch switchLogin = rootView.findViewById(R.id.switch_login);
+        switchLogin.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (switchLogin.isChecked())
+                    switchLogin.setText(R.string.login_register_account);
+                else
+                    switchLogin.setText(R.string.login_existing_account);
+            }
+        });
+
+        final EditText editTextUsername = rootView.findViewById(R.id.edit_text_login_name);
+
+        if (paramUsername != null) {
+            switchLogin.setChecked(false);
+            switchLogin.setText(R.string.login_existing_account);
+            editTextUsername.setText(paramUsername);
+        } else {
+            switchLogin.setChecked(true);
+            switchLogin.setText(R.string.login_register_account);
+            editTextUsername.setText("");
+        }
+
+        Button buttonLogin = rootView.findViewById(R.id.button_login);
+        buttonLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((Button) v).setEnabled(false);
+                String username = editTextUsername.getText().toString();
+                String password = ((EditText) rootView.findViewById(R.id.edit_text_login_password)).getText().toString();
+                boolean newUser = switchLogin.isChecked();
+                TextView textViewLogin = rootView.findViewById(R.id.text_view_login);
+
+                if (username.length() > 0 && password.length() > 0) {
+                    textViewLogin.setText(getString(R.string.login_message_default));
+
+                    DataAccessObject.loginUsername = username;
+                    DataAccessObject.loginPassword = password;
+                    DataAccessObject dataAccessObject = new DataAccessObject();
+                    String response;
+
+                    if (newUser) { // Register new user?
+                        response = dataAccessObject.userRegister();
+
+                        if (response != null) {
+                            if (response.startsWith(DataAccessObject.RESPONSE_MESSAGE_ERROR_PREFIX)) {
+                                textViewLogin.setText(response);
+                            } else { // User has been successfully registered
+                                textViewLogin.setText("Registered... Logging In");
+                                response = dataAccessObject.userLogin();
+                                if (response!=null) { // Received a token key
+
+                                }
+                            }
+                        } else { // Null returned from the network call
+                            textViewLogin.setText("Unknown error. Already registered? Try again.");
+                        }
+                    } else { // Login existing user
+                        textViewLogin.setText("Logging In");
+                        response = dataAccessObject.userLogin();
+                        if (response!=null) { // Received a token key
+
+                        }
+                    }
+                } else { // User clicked Login button without typing anything into the EditText fields
+                    textViewLogin.setText(getString(R.string.login_message_blank));
+                }
+
+                ((Button) v).setEnabled(true);
+            }
+        });
+
+        return rootView;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
+    public void onButtonPressed(String username) {
         if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+            mListener.onFragmentInteraction(username);
         }
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+            throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
         }
     }
 
@@ -91,18 +154,8 @@ public class LoginFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+
+        void onFragmentInteraction(String username);
     }
 }
