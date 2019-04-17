@@ -1,13 +1,24 @@
 package com.lambdaschool.build_week3_simpsons_says;
 
+import android.graphics.Bitmap;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 public class DataAccessObject {
+    private static final String URL_SIMPSONS_SAYS_BASE = "https://simpsonssays.herokuapp.com/";
+    private static final String URL_SIMPSONS_SAYS_REGISTER = "register";
+    private static final String URL_SIMPSONS_SAYS_LOGIN = "login";
+    private static final String URL_SIMPSONS_SAYS_FAVORITES = "favorites";
+    private static final String URL_SIMPSONS_SAYS_SEARCH = "search";
+    private static final String URL_SIMPSONS_SAYS_GENERATE = "generator";
 
     /* ENDPOINTS
     Post to /register
@@ -40,9 +51,8 @@ public class DataAccessObject {
                 mockDataStringArray[i] = mockDataStringArray[i].replace(", ", " ");
             }
             String[] eachLine = mockDataStringArray[i].split(",");
-                Quote quote = new Quote(Integer.parseInt(eachLine[0]), eachLine[7], eachLine[9]);
-                quoteArrayList.add(quote);
-
+            Quote quote = new Quote(Integer.parseInt(eachLine[0]), eachLine[7], eachLine[9], eachLine[8], Integer.parseInt(eachLine[5]), Integer.parseInt(eachLine[1]));
+            quoteArrayList.add(quote);
         }
         return quoteArrayList;
 
@@ -53,6 +63,39 @@ public class DataAccessObject {
             }
         }).start();*/
     }
+
+    public ArrayList<Quote> getQuotes() {
+        String returnedJsonAsString = NetworkAdapter.httpRequest(URL_SIMPSONS_SAYS_BASE + URL_SIMPSONS_SAYS_SEARCH);
+        ArrayList<Quote> quoteArrayList = new ArrayList<>();
+        Quote quote = null;
+        JSONObject jsonObject = null;
+        JSONArray jsonArray = null;
+
+        try {
+
+            jsonArray = new JSONArray(returnedJsonAsString);
+
+            for (int i = 0; i < jsonArray.length(); i++) {
+                jsonObject = jsonArray.getJSONObject(i);
+
+                quote = new Quote(jsonObject.getInt("quote_id"),
+                        jsonObject.getString("raw_character_text"),
+                        jsonObject.getString("spoken_words"),
+                        jsonObject.getString("episode_title"),
+                        jsonObject.getInt("season"),
+                        jsonObject.getInt("number_in_season"));
+
+                quoteArrayList.add(quote);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return quoteArrayList;
+    }
+
+    String mockJson1 = "{'quote_id': 9552, 'raw_character_text': 'Lisa Simpson', 'spoken_words': 'That life is worth living.', 'episode_title': \"Lisa's Substitute\", 'season': 2, 'number_in_season': 19} ";
+    String mockJson2 = "[{'quote_id': 9549, 'raw_character_text': 'Miss Hoover', 'spoken_words': \"No, actually, it was a little of both. Sometimes when a disease is in all the magazines and all the news shows, it's only natural that you think you have it.\", 'episode_title': \"Lisa's Substitute\", 'season': 2, 'number_in_season': 19}, {'quote_id': 9550, 'raw_character_text': 'Lisa Simpson', 'spoken_words': \"Where's Mr. Bergstrom?\", 'episode_title': \"Lisa's Substitute\", 'season': 2, 'number_in_season': 19}, {'quote_id': 9551, 'raw_character_text': 'Miss Hoover', 'spoken_words': \"I don't know. Although I'd sure like to talk to him. He didn't touch my lesson plan. What did he teach you?\", 'episode_title': \"Lisa's Substitute\", 'season': 2, 'number_in_season': 19}, {'quote_id': 9552, 'raw_character_text': 'Lisa Simpson', 'spoken_words': 'That life is worth living.', 'episode_title': \"Lisa's Substitute\", 'season': 2, 'number_in_season': 19}]";
 
     private String mockData = "0,32,209,\"Miss Hoover: No, actually, it was a little of both. Sometimes when a disease is in all the magazines and all the news shows, it's only natural that you think you have it.\",TRUE,464,3,Miss Hoover,Springfield Elementary School,\"No, actually, it was a little of both. Sometimes when a disease is in all the magazines and all the news shows, it's only natural that you think you have it.\"\n" +
             "1,32,210,Lisa Simpson: (NEAR TEARS) Where's Mr. Bergstrom?,TRUE,9,3,Lisa Simpson,Springfield Elementary School,Where's Mr. Bergstrom?\n" +

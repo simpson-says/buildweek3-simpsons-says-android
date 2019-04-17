@@ -1,12 +1,15 @@
 package com.lambdaschool.build_week3_simpsons_says;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
+import android.widget.ImageView;
+import android.widget.TextView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -16,17 +19,11 @@ import android.view.ViewGroup;
  * Use the {@link DetailsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class DetailsFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+public class DetailsFragment extends DialogFragment {
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public OnFragmentInteractionListener interactionListener;
+    private OnFragmentInteractionListener interactionListener;
+    public static final String ARG_PARAM = "details";
+    private Quote quote;
 
     public DetailsFragment() {
         // Required empty public constructor
@@ -44,8 +41,7 @@ public class DetailsFragment extends Fragment {
     public static DetailsFragment newInstance(String param1, String param2) {
         DetailsFragment fragment = new DetailsFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_PARAM, param1);
         fragment.setArguments(args);
         return fragment;
     }
@@ -54,16 +50,24 @@ public class DetailsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+        if (getArguments().containsKey(ARG_PARAM)) {
+            quote = (Quote) getArguments().getSerializable(ARG_PARAM);
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_details, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_details, container, false);
+
+        if (quote != null) {
+            //rootView.setBackgroundColor(Color.YELLOW);
+            ImageView imageViewQuote = rootView.findViewById(R.id.image_view_fragment_details_portrait);
+            imageViewQuote.setImageResource(R.drawable.placeholder);
+            TextView textViewQuote = rootView.findViewById(R.id.text_view_fragment_details);
+            textViewQuote.setText(quote.toVerboseString());
+        }
+        return rootView;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

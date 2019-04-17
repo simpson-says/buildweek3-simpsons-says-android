@@ -1,21 +1,28 @@
 package com.lambdaschool.build_week3_simpsons_says;
 
 import android.support.annotation.NonNull;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
 
 import java.io.Serializable;
+import java.util.Locale;
 
 public class Quote implements Serializable {
     private int id;
     private String character;
     private String quote;
+    private String title;
     private int season;
     private int episode;
-    private String title;
 
-    public Quote(int id, String character, String quote) {
+    public Quote(int id, String character, String quote, String title, int season, int episode) {
         this.id = id;
         this.character = character;
         this.quote = quote;
+        this.title = title;
+        this.season = season;
+        this.episode = episode;
     }
 
     public int getId() {
@@ -42,6 +49,14 @@ public class Quote implements Serializable {
         this.quote = quote;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public int getSeason() {
         return season;
     }
@@ -58,17 +73,25 @@ public class Quote implements Serializable {
         this.episode = episode;
     }
 
-    public String getTitle() {
-        return title;
-    }
+    public SpannableStringBuilder toVerboseString() {
+        SpannableString stringSeason = new SpannableString(String.format(Locale.US, "Season: %d\n", getSeason()));
+        SpannableString stringEpisode = new SpannableString(String.format(Locale.US, "Episode: %d\n", getEpisode()));
+        SpannableString stringTitle = new SpannableString(String.format(Locale.US, "Title: %s\n", getTitle()));
+        SpannableString stringCharacter = new SpannableString(String.format(Locale.US, "Character: %s\n", getCharacter()));
+        SpannableString stringQuote = new SpannableString(String.format(Locale.US, "Quote: %s", getQuote()));
 
-    public void setTitle(String title) {
-        this.title = title;
+        stringSeason.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD), 0, 7, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        stringEpisode.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD), 0, 8, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        stringTitle.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD), 0, 6, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        stringCharacter.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD), 0, 10, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        stringQuote.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD), 0, 6, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        return new SpannableStringBuilder().append(stringSeason).append(stringEpisode).append(stringTitle).append(stringCharacter).append(stringQuote);
     }
 
     @NonNull
     @Override
     public String toString() {
-        return String.format("%s: %s", getCharacter(), getQuote());
+        return String.format(Locale.US, "%s: %s", getCharacter(), getQuote());
     }
 }

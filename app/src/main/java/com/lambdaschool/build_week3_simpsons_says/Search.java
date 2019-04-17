@@ -54,11 +54,12 @@ public class Search extends AppCompatActivity implements DetailsFragment.OnFragm
 
         DetailsFragment detailsFragment = new DetailsFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable("details", quote);
+        bundle.putSerializable(DetailsFragment.ARG_PARAM, quote);
         detailsFragment.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.layout_details, detailsFragment)
+/*        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.linear_layout_fragment_search, detailsFragment)
                 .addToBackStack(null)
-                .commit();
+                .commit();*/
+        detailsFragment.show(getSupportFragmentManager(),"details");
     }
 }

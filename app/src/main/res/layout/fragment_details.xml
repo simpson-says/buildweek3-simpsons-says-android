@@ -19,7 +19,7 @@
 
     <TextView
         android:id="@+id/text_view_fragment_details"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Lisa Simpson: I'm glad I'm not crying because I would hate for you to think that what I'm about to say is based on emotion. But you, sir, are a baboon!" />
 
