@@ -1,16 +1,11 @@
 package com.lambdaschool.build_week3_simpsons_says;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Environment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -56,10 +51,11 @@ public class Search extends AppCompatActivity implements DetailsFragment.OnFragm
         Bundle bundle = new Bundle();
         bundle.putSerializable(DetailsFragment.ARG_PARAM, quote);
         detailsFragment.setArguments(bundle);
+        detailsFragment.setStyle(DialogFragment.STYLE_NORMAL, 0);
 /*        getSupportFragmentManager().beginTransaction()
                 .replace(R.id.linear_layout_fragment_search, detailsFragment)
                 .addToBackStack(null)
                 .commit();*/
-        detailsFragment.show(getSupportFragmentManager(),"details");
+        detailsFragment.show(getSupportFragmentManager(), DetailsFragment.ARG_PARAM);
     }
 }
