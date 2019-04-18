@@ -9,17 +9,6 @@
     tools:context=".MainActivity">
 
     <ImageView
-        android:id="@+id/image_view_logo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:adjustViewBounds="true"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/logo_bubble" />
-
-    <ImageView
         android:id="@+id/image_view_background"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -33,6 +22,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ImageView
+        android:id="@+id/image_view_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:adjustViewBounds="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/logo_bubble" />
 
     <Button
         android:id="@+id/button_search_activity"
@@ -71,6 +70,7 @@
         android:id="@+id/text_view_random_quote"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingBottom="15dp"
         android:text="No time. I'll just deduce where you were from a list of possibilities in my head. ~Homer Simpson"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
