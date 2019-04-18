@@ -242,6 +242,56 @@ public class DataAccessObject {
         return quoteArrayList;
     }
 
+    public ArrayList<Quote> getUserFavorites() {
+        final ArrayList<Quote> quoteArrayList = new ArrayList<>();
+
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+
+                Quote quote = null;
+                JSONObject jsonObject = null;
+                JSONArray jsonArray = null;
+
+                headerPropertiesHashMap = new HashMap<>();
+                headerPropertiesHashMap.put("Content-Type", "application/json");
+                headerPropertiesHashMap.put("Authorization", token);
+                returnedJsonAsString = NetworkAdapter.httpRequest(URL_SIMPSONS_SAYS_BASE + URL_SIMPSONS_SAYS_FAVORITES, NetworkAdapter.REQUEST_GET, jsonObject, headerPropertiesHashMap);
+
+                try {
+
+                    jsonArray = new JSONArray(returnedJsonAsString);
+
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        jsonObject = jsonArray.getJSONObject(i);
+
+                        quote = new Quote(jsonObject.getInt("quote_id"),
+                                jsonObject.getString("raw_character_text"),
+                                jsonObject.getString("spoken_words"),
+                                jsonObject.getString("episode_title"),
+                                jsonObject.getInt("season"),
+                                jsonObject.getInt("number_in_season"));
+
+                        quoteArrayList.add(quote);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        Thread thread = new Thread(runnable);
+        thread.start();
+
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return quoteArrayList;
+    }
+
     public ArrayList<String> generateQuotesByCharacter(final String characterToGenerate) {
         final ArrayList<String> stringArrayList = new ArrayList<>();
 

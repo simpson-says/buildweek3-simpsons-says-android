@@ -55,6 +55,7 @@ public class NetworkAdapter {
             switch (requestMethod) {
                 case REQUEST_POST:
                 case REQUEST_PUT:
+                case REQUEST_GET:
                     if (requestBody != null) {
                         httpURLConnection.setDoInput(true);
                         OutputStream outputStream = httpURLConnection.getOutputStream();
