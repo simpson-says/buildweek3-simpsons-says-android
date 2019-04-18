@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -35,6 +36,20 @@ public class FavoritesListAdapter extends RecyclerView.Adapter<FavoritesListAdap
             public void onClick(View v) {
                 if (interactionListener != null)
                     interactionListener.onFragmentInteraction(quote);
+            }
+        });
+        viewHolder.viewParent.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                DataAccessObject dao = new DataAccessObject();
+                boolean removedFromFavorites = dao.setUserFavorites(quote.getId());
+
+                if (removedFromFavorites) {
+                    String messageToText = "Quote #" + String.valueOf(quote.getId()) + " has been (de/)favorited!";
+                    Toast.makeText(v.getContext(), messageToText, (Toast.LENGTH_LONG)).show();
+                    return true;
+                }
+                return false;
             }
         });
     }

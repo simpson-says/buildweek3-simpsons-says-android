@@ -48,7 +48,7 @@ public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.Vi
                 boolean addedToFavorites = dao.setUserFavorites(quote.getId());
 
                 if (addedToFavorites) {
-                    String messageToText = "Quote #" + String.valueOf(quote.getId()) + " has been favorited!";
+                    String messageToText = "Quote #" + String.valueOf(quote.getId()) + " has been (de/)favorited!";
                     Toast.makeText(v.getContext(), messageToText, (Toast.LENGTH_LONG)).show();
                     return true;
                 }
