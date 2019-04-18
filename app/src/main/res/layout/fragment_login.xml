@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:checked="false"
         android:showText="false"
-        android:text="@string/login_existing_account"
+        android:text="@string/login_switch_existing"
         android:textAlignment="center"
         tools:checked="false" />
 

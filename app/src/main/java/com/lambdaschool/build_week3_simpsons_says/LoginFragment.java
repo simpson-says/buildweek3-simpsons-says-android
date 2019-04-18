@@ -3,7 +3,6 @@ package com.lambdaschool.build_week3_simpsons_says;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -57,15 +56,19 @@ public class LoginFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final Context context = getContext();
         final View rootView = inflater.inflate(R.layout.fragment_login, container, false);
-
+        final Button buttonLogin = rootView.findViewById(R.id.button_login);
         final Switch switchLogin = rootView.findViewById(R.id.switch_login);
         switchLogin.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (switchLogin.isChecked())
-                    switchLogin.setText(R.string.login_register_account);
-                else
-                    switchLogin.setText(R.string.login_existing_account);
+                if (switchLogin.isChecked()) {
+                    switchLogin.setText(R.string.login_switch_register);
+                    buttonLogin.setText(getString(R.string.login_button_register));
+                }
+                else {
+                    switchLogin.setText(R.string.login_switch_existing);
+                    buttonLogin.setText(getString(R.string.login_button_existing));
+                }
             }
         });
 
@@ -73,15 +76,17 @@ public class LoginFragment extends DialogFragment {
 
         if (paramUsername != null && !paramUsername.equals("")) {
             switchLogin.setChecked(false);
-            switchLogin.setText(R.string.login_existing_account);
+            switchLogin.setText(R.string.login_switch_existing);
+            buttonLogin.setText(getString(R.string.login_button_existing));
             editTextUsername.setText(paramUsername);
         } else {
             switchLogin.setChecked(true);
-            switchLogin.setText(R.string.login_register_account);
+            switchLogin.setText(R.string.login_switch_register);
+            buttonLogin.setText(getString(R.string.login_button_register));
             editTextUsername.setText("");
         }
 
-        Button buttonLogin = rootView.findViewById(R.id.button_login);
+
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -106,7 +111,7 @@ public class LoginFragment extends DialogFragment {
                             if (response.startsWith(DataAccessObject.RESPONSE_MESSAGE_ERROR_PREFIX)) {
                                 textViewLogin.setText(response);
                             } else { // User has been successfully registered
-                                textViewLogin.setText("Registered... Logging In");
+                                textViewLogin.setText(getString(R.string.login_message_registered_attempt));
                                 response = dataAccessObject.userLogin();
 
                                 if (response != null) { // Received a token key, so store the username, grant user access to app
@@ -119,14 +124,14 @@ public class LoginFragment extends DialogFragment {
                                     MainActivity.loginFragment.dismiss();
 
                                 } else { // Null returned from the network call
-                                    textViewLogin.setText("Invalid Username or Password. Try again.");
+                                    textViewLogin.setText(getString(R.string.login_message_credentials));
                                 }
                             }
                         } else { // Null returned from the network call
-                            textViewLogin.setText("Unknown error. Already registered? Try again.");
+                            textViewLogin.setText(getString(R.string.login_message_unregistered));
                         }
                     } else { // Login existing user
-                        textViewLogin.setText("Logging In");
+                        textViewLogin.setText(getString(R.string.login_message_attempt));
                         response = dataAccessObject.userLogin();
 
                         if (response != null) { // Received a token key, so store the username, grant user access to app
@@ -140,7 +145,7 @@ public class LoginFragment extends DialogFragment {
                             MainActivity.loginFragment.dismiss();
 
                         } else { // Null returned from the network call
-                            textViewLogin.setText("Invalid Username or Password. Try again.");
+                            textViewLogin.setText(getString(R.string.login_message_credentials));
                         }
                     }
                 } else { // User clicked Login button without typing anything into the EditText fields

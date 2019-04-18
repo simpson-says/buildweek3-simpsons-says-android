@@ -30,7 +30,6 @@ public class Search extends AppCompatActivity implements DetailsFragment.OnFragm
             public void onClick(View v) {
                 EditText editTextSearchEntry = findViewById(R.id.edit_text_search_entry);
                 String searchText = editTextSearchEntry.getText().toString();
-
                 DataAccessObject dao = new DataAccessObject();
                 ArrayList<Quote> quoteArrayList = dao.searchForQuotes(searchText);
                 DetailsFragment.OnFragmentInteractionListener interactionListener = (DetailsFragment.OnFragmentInteractionListener) context; //TODO: Delete this and get proper handle
@@ -39,16 +38,6 @@ public class Search extends AppCompatActivity implements DetailsFragment.OnFragm
                 SearchListAdapter searchListAdapter = new SearchListAdapter(quoteArrayList, interactionListener); //TODO: Replace this variable with the proper interactionListener
                 recyclerView.setAdapter(searchListAdapter);
                 recyclerView.setHasFixedSize(true);
-
-//                InputMethodManager inputManager = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-//                inputManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-
-                //editTextSearchEntry.setInputType(0);
-//                if (view != null) {
-//                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-//                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-//                }
-                //getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
             }
         });
     }
@@ -56,24 +45,11 @@ public class Search extends AppCompatActivity implements DetailsFragment.OnFragm
 
     @Override
     public void onFragmentInteraction(Quote quote) {
-
-/*
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction
-                .replace(R.id.fragment_container, new ItemListFragment())
-                .commit();
-*/
-
         DetailsFragment detailsFragment = new DetailsFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable(DetailsFragment.ARG_PARAM, quote);
         detailsFragment.setArguments(bundle);
         detailsFragment.setStyle(DialogFragment.STYLE_NORMAL, 0);
-/*        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.linear_layout_fragment_search, detailsFragment)
-                .addToBackStack(null)
-                .commit();*/
         detailsFragment.show(getSupportFragmentManager(), DetailsFragment.ARG_PARAM);
     }
 }

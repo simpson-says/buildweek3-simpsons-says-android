@@ -16,7 +16,9 @@ public class DataAccessObject {
     private static final String URL_SIMPSONS_SAYS_SEARCH = "users/search";
     private static final String URL_SIMPSONS_SAYS_GENERATE = "users/generate";
     static final String RESPONSE_MESSAGE_ERROR_PREFIX = "Error: ";
-    static final String RESPONSE_MESSAGE_SUCCESS_PREFIX = "Success: ";
+    private static final String RESPONSE_MESSAGE_SUCCESS_PREFIX = "Success: ";
+    private static final String HEADER_PROPERTIES_DEFAULT_KEY = "Content-Type";
+    private static final String HEADER_PROPERTIES_DEFAULT_VALUE = "application/json";
     private HashMap<String, String> headerPropertiesHashMap;
     private String returnedJsonAsString;
     private String messageToReturn;
@@ -44,7 +46,7 @@ public class DataAccessObject {
                 }
 
                 headerPropertiesHashMap = new HashMap<>();
-                headerPropertiesHashMap.put("Content-Type", "application/json");
+                headerPropertiesHashMap.put(HEADER_PROPERTIES_DEFAULT_KEY, HEADER_PROPERTIES_DEFAULT_VALUE);
                 returnedJsonAsString = NetworkAdapter.httpRequest(URL_SIMPSONS_SAYS_BASE + URL_SIMPSONS_SAYS_REGISTER, NetworkAdapter.REQUEST_POST, jsonObject, headerPropertiesHashMap);
 
                 try {
@@ -116,7 +118,7 @@ public class DataAccessObject {
                 }
 
                 headerPropertiesHashMap = new HashMap<>();
-                headerPropertiesHashMap.put("Content-Type", "application/json");
+                headerPropertiesHashMap.put(HEADER_PROPERTIES_DEFAULT_KEY, HEADER_PROPERTIES_DEFAULT_VALUE);
                 returnedJsonAsString = NetworkAdapter.httpRequest(URL_SIMPSONS_SAYS_BASE + URL_SIMPSONS_SAYS_LOGIN, NetworkAdapter.REQUEST_POST, jsonObject, headerPropertiesHashMap);
 
                 try {
@@ -191,7 +193,7 @@ public class DataAccessObject {
                     e.printStackTrace();
                 }
                 headerPropertiesHashMap = new HashMap<>();
-                headerPropertiesHashMap.put("Content-Type", "application/json");
+                headerPropertiesHashMap.put(HEADER_PROPERTIES_DEFAULT_KEY, HEADER_PROPERTIES_DEFAULT_VALUE);
                 returnedJsonAsString = NetworkAdapter.httpRequest(URL_SIMPSONS_SAYS_BASE + URL_SIMPSONS_SAYS_SEARCH, NetworkAdapter.REQUEST_POST, jsonObject, headerPropertiesHashMap);
 
                 try {
@@ -240,7 +242,7 @@ public class DataAccessObject {
                 JSONArray jsonArray = null;
 
                 headerPropertiesHashMap = new HashMap<>();
-                headerPropertiesHashMap.put("Content-Type", "application/json");
+                headerPropertiesHashMap.put(HEADER_PROPERTIES_DEFAULT_KEY, HEADER_PROPERTIES_DEFAULT_VALUE);
                 headerPropertiesHashMap.put("Authorization", token);
                 returnedJsonAsString = NetworkAdapter.httpRequest(URL_SIMPSONS_SAYS_BASE + URL_SIMPSONS_SAYS_FAVORITES, NetworkAdapter.REQUEST_GET, jsonObject, headerPropertiesHashMap);
 
@@ -296,7 +298,7 @@ public class DataAccessObject {
                     e.printStackTrace();
                 }
                 headerPropertiesHashMap = new HashMap<>();
-                headerPropertiesHashMap.put("Content-Type", "application/json");
+                headerPropertiesHashMap.put(HEADER_PROPERTIES_DEFAULT_KEY, HEADER_PROPERTIES_DEFAULT_VALUE);
                 headerPropertiesHashMap.put("Authorization", token);
                 returnedJsonAsString = NetworkAdapter.httpRequest(URL_SIMPSONS_SAYS_BASE + URL_SIMPSONS_SAYS_FAVORITES, NetworkAdapter.REQUEST_POST, jsonObject, headerPropertiesHashMap);
 
@@ -352,7 +354,7 @@ public class DataAccessObject {
                     e.printStackTrace();
                 }
                 headerPropertiesHashMap = new HashMap<>();
-                headerPropertiesHashMap.put("Content-Type", "application/json");
+                headerPropertiesHashMap.put(HEADER_PROPERTIES_DEFAULT_KEY, HEADER_PROPERTIES_DEFAULT_VALUE);
                 returnedJsonAsString = NetworkAdapter.httpRequest(URL_SIMPSONS_SAYS_BASE + URL_SIMPSONS_SAYS_GENERATE, NetworkAdapter.REQUEST_POST, jsonObject, headerPropertiesHashMap);
 
                 try {
