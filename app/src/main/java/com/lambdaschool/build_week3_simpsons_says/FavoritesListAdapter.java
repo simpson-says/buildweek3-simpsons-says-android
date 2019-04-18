@@ -27,7 +27,7 @@ public class FavoritesListAdapter extends RecyclerView.Adapter<FavoritesListAdap
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int position) {
         final Quote quote = quoteArrayList.get(position);
         viewHolder.imageViewQuote.setImageResource(quote.getImage());
         viewHolder.textViewQuote.setText(quote.toString());
@@ -45,8 +45,9 @@ public class FavoritesListAdapter extends RecyclerView.Adapter<FavoritesListAdap
                 boolean removedFromFavorites = dao.setUserFavorites(quote.getId());
 
                 if (removedFromFavorites) {
-                    String messageToText = "Quote #" + String.valueOf(quote.getId()) + " has been (de/)favorited!";
+                    String messageToText = "Quote #" + String.valueOf(quote.getId()) + " has been de-favorited!";
                     Toast.makeText(v.getContext(), messageToText, (Toast.LENGTH_LONG)).show();
+                    notifyItemRemoved(viewHolder.getAdapterPosition());
                     return true;
                 }
                 return false;
