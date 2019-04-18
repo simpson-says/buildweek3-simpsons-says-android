@@ -301,6 +301,12 @@ public class DataAccessObject {
                 returnedJsonAsString = NetworkAdapter.httpRequest(URL_SIMPSONS_SAYS_BASE + URL_SIMPSONS_SAYS_FAVORITES, NetworkAdapter.REQUEST_POST, jsonObject, headerPropertiesHashMap);
 
                 try {
+                    jsonObject = new JSONObject(returnedJsonAsString);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                try {
                     successfullyAdded = jsonObject.getBoolean("Favorite-Modified");
                 } catch (JSONException e) {
                     e.printStackTrace();
