@@ -9,19 +9,22 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DataAccessObject {
-    private static final String URL_SIMPSONS_SAYS_BASE = "https://simpson-says-backend.herokuapp.com/api/";
-    private static final String URL_SIMPSONS_SAYS_REGISTER = "register";
-    private static final String URL_SIMPSONS_SAYS_LOGIN = "login";
-    private static final String URL_SIMPSONS_SAYS_FAVORITES = "favorites";
-    private static final String URL_SIMPSONS_SAYS_SEARCH = "search";
-    private static final String URL_SIMPSONS_SAYS_GENERATE = "generator";
+    private static final String URL_SIMPSONS_SAYS_BASE = "https://simpson-says-backend.herokuapp.com/";
+    private static final String URL_SIMPSONS_SAYS_REGISTER = "api/register";
+    private static final String URL_SIMPSONS_SAYS_LOGIN = "api/login";
+    private static final String URL_SIMPSONS_SAYS_FAVORITES = "users/favorites";
+    private static final String URL_SIMPSONS_SAYS_SEARCH = "users/search";
+    private static final String URL_SIMPSONS_SAYS_GENERATE = "users/generate";
     static final String RESPONSE_MESSAGE_ERROR_PREFIX = "Error: ";
+    static final String RESPONSE_MESSAGE_SUCCESS_PREFIX = "Success: ";
     private HashMap<String, String> headerPropertiesHashMap;
     private String returnedJsonAsString;
     private String messageToReturn;
 
-    public static String loginUsername;
-    public static String loginPassword;
+    static String loginUsername;
+    static String loginPassword;
+    static String token;
+
 
 
     /* ENDPOINTS
@@ -47,27 +50,6 @@ public class DataAccessObject {
     Post to /generator
     params: a string to pass on
     This should be behind an auth header*/
-
-    public ArrayList<Quote> getHardCodedData() {
-        ArrayList<Quote> quoteArrayList = new ArrayList<>();
-        String[] mockDataStringArray = MOCK_CSV.split("\n");
-        for (int i = 0; i < mockDataStringArray.length; ++i) {
-            if (mockDataStringArray[i].contains(", ")) {
-                mockDataStringArray[i] = mockDataStringArray[i].replace(", ", " ");
-            }
-            String[] eachLine = mockDataStringArray[i].split(",");
-            Quote quote = new Quote(Integer.parseInt(eachLine[0]), eachLine[7], eachLine[9], eachLine[8], Integer.parseInt(eachLine[5]), Integer.parseInt(eachLine[1]));
-            quoteArrayList.add(quote);
-        }
-        return quoteArrayList;
-
-/*        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                String contents = NetworkAdapter.fileParse(Environment.getDataDirectory().getPath(), "simpsons_quotes_paired.csv");
-            }
-        }).start();*/
-    }
 
     public String userRegister() {
         messageToReturn = null;
@@ -172,6 +154,7 @@ public class DataAccessObject {
                 String responseToken = null;
                 try {
                     responseToken = jsonObject.getString("token");
+                    token = responseToken;
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -184,7 +167,7 @@ public class DataAccessObject {
                 }
 
                 if (responseToken != null)
-                    messageToReturn = responseToken;
+                    messageToReturn = RESPONSE_MESSAGE_SUCCESS_PREFIX + responseToken;
                 else if (responseMessage != null)
                     messageToReturn = RESPONSE_MESSAGE_ERROR_PREFIX + responseMessage;
             }
@@ -203,12 +186,47 @@ public class DataAccessObject {
         return messageToReturn;
     }
 
-    public ArrayList<Quote> getQuotes() {
+    public ArrayList<Quote> searchForQuotes(final String searchText) {
+        final ArrayList<Quote> quoteArrayList = new ArrayList<>();
 
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                returnedJsonAsString = NetworkAdapter.httpRequest(URL_SIMPSONS_SAYS_BASE + URL_SIMPSONS_SAYS_SEARCH);
+
+                Quote quote = null;
+                JSONObject jsonObject = null;
+                JSONArray jsonArray = null;
+
+                try {
+                    jsonObject = new JSONObject();
+                    jsonObject.put("searchValue", searchText);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                headerPropertiesHashMap = new HashMap<>();
+                headerPropertiesHashMap.put("Content-Type", "application/json");
+                returnedJsonAsString = NetworkAdapter.httpRequest(URL_SIMPSONS_SAYS_BASE + URL_SIMPSONS_SAYS_SEARCH, NetworkAdapter.REQUEST_POST, jsonObject, headerPropertiesHashMap);
+
+                try {
+
+                    jsonArray = new JSONArray(returnedJsonAsString);
+
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        jsonObject = jsonArray.getJSONObject(i);
+
+                        quote = new Quote(jsonObject.getInt("quote_id"),
+                                jsonObject.getString("raw_character_text"),
+                                jsonObject.getString("spoken_words"),
+                                jsonObject.getString("episode_title"),
+                                jsonObject.getInt("season"),
+                                jsonObject.getInt("number_in_season"));
+
+                        quoteArrayList.add(quote);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         };
 
@@ -221,32 +239,28 @@ public class DataAccessObject {
             e.printStackTrace();
         }
 
-        ArrayList<Quote> quoteArrayList = new ArrayList<>();
-        Quote quote = null;
-        JSONObject jsonObject = null;
-        JSONArray jsonArray = null;
-
-        try {
-
-            jsonArray = new JSONArray(returnedJsonAsString);
-
-            for (int i = 0; i < jsonArray.length(); i++) {
-                jsonObject = jsonArray.getJSONObject(i);
-
-                quote = new Quote(jsonObject.getInt("quote_id"),
-                        jsonObject.getString("raw_character_text"),
-                        jsonObject.getString("spoken_words"),
-                        jsonObject.getString("episode_title"),
-                        jsonObject.getInt("season"),
-                        jsonObject.getInt("number_in_season"));
-
-                quoteArrayList.add(quote);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
         return quoteArrayList;
+    }
+
+    public ArrayList<Quote> getHardCodedData() {
+        ArrayList<Quote> quoteArrayList = new ArrayList<>();
+        String[] mockDataStringArray = MOCK_CSV.split("\n");
+        for (int i = 0; i < mockDataStringArray.length; ++i) {
+            if (mockDataStringArray[i].contains(", ")) {
+                mockDataStringArray[i] = mockDataStringArray[i].replace(", ", " ");
+            }
+            String[] eachLine = mockDataStringArray[i].split(",");
+            Quote quote = new Quote(Integer.parseInt(eachLine[0]), eachLine[7], eachLine[9], eachLine[8], Integer.parseInt(eachLine[5]), Integer.parseInt(eachLine[1]));
+            quoteArrayList.add(quote);
+        }
+        return quoteArrayList;
+
+/*        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String contents = NetworkAdapter.fileParse(Environment.getDataDirectory().getPath(), "simpsons_quotes_paired.csv");
+            }
+        }).start();*/
     }
 
     private static final String MOCK_JSON_1 = "{'quote_id': 9552, 'raw_character_text': 'Lisa Simpson', 'spoken_words': 'That life is worth living.', 'episode_title': \"Lisa's Substitute\", 'season': 2, 'number_in_season': 19} ";

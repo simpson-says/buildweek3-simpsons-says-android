@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Build_Week1_Simpsons_Says</string>
+    <string name="app_name">Build_Week3_Simpsons_Says</string>
     <string name="login_existing_account">Existing Account</string>
     <string name="login_register_account">Register Account</string>
     <string name="login_message_default">Login First</string>

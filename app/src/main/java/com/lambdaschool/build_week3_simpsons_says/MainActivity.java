@@ -2,6 +2,7 @@ package com.lambdaschool.build_week3_simpsons_says;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
@@ -12,24 +13,22 @@ import android.widget.Button;
 import android.widget.Switch;
 
 public class MainActivity extends AppCompatActivity implements LoginFragment.OnFragmentInteractionListener {
-
+    static LoginFragment loginFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         final Context context = this;
 
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.app_name), Context.MODE_PRIVATE);
+        String sharedPreferencesUsername = sharedPreferences.getString(LoginFragment.SHARED_PREFERENCES_USERNAME, "");
 
-
-/*        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction
-                .replace(R.id.fragment_container, new ItemListFragment())
-                .commit();*/
-        LoginFragment loginFragment = new LoginFragment();
-/*        Bundle bundle = new Bundle();
-        bundle.putSerializable(DetailsFragment.ARG_PARAM, quote);
-        loginFragment.setArguments(bundle);*/
+        loginFragment = new LoginFragment();
+        if (sharedPreferencesUsername != null && !sharedPreferencesUsername.equals("")) {
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(LoginFragment.ARG_PARAM, sharedPreferencesUsername);
+            loginFragment.setArguments(bundle);
+        }
         loginFragment.setStyle(DialogFragment.STYLE_NORMAL, 0);
         loginFragment.setCancelable(false);
 /*        getSupportFragmentManager().beginTransaction()

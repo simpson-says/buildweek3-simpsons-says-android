@@ -33,27 +33,27 @@ public class Quote implements Serializable {
     private int assignImage(String character) {
         int drawableImage = INVALID_DEFAULT_DRAWABLE_IMAGE;
 
-        for (int i = 0; i < ImageConstants.PORTRAIT_NAMES.length; ++i) {
-            if (character.toLowerCase().startsWith(ImageConstants.PORTRAIT_NAMES[i]))
-                drawableImage = ImageConstants.PORTRAIT_DRAWABLES[i];
+        for (int i = 0; i < CharacterPortraits.PORTRAIT_NAMES.length; ++i) {
+            if (character.toLowerCase().startsWith(CharacterPortraits.PORTRAIT_NAMES[i]))
+                drawableImage = CharacterPortraits.PORTRAIT_DRAWABLES[i];
         }
 
         if (drawableImage == INVALID_DEFAULT_DRAWABLE_IMAGE) {
-            switch (new Random().nextInt(ImageConstants.DEFAULT_DRAWABLES.length)) {
+            switch (new Random().nextInt(CharacterPortraits.DEFAULT_DRAWABLES.length)) {
                 case 0:
-                    drawableImage = ImageConstants.DEFAULT_DRAWABLES[0];
+                    drawableImage = CharacterPortraits.DEFAULT_DRAWABLES[0];
                     break;
                 case 1:
-                    drawableImage = ImageConstants.DEFAULT_DRAWABLES[1];
+                    drawableImage = CharacterPortraits.DEFAULT_DRAWABLES[1];
                     break;
                 case 2:
-                    drawableImage = ImageConstants.DEFAULT_DRAWABLES[2];
+                    drawableImage = CharacterPortraits.DEFAULT_DRAWABLES[2];
                     break;
                 case 3:
-                    drawableImage = ImageConstants.DEFAULT_DRAWABLES[3];
+                    drawableImage = CharacterPortraits.DEFAULT_DRAWABLES[3];
                     break;
                 default:
-                    drawableImage = ImageConstants.DEFAULT_DRAWABLES[0];
+                    drawableImage = CharacterPortraits.DEFAULT_DRAWABLES[0];
                     break;
             }
         }

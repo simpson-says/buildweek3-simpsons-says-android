@@ -1,7 +1,9 @@
 package com.lambdaschool.build_week3_simpsons_says;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -24,6 +26,7 @@ import android.widget.TextView;
  */
 public class LoginFragment extends DialogFragment {
 
+    public static final String SHARED_PREFERENCES_USERNAME = "username";
     public static final String ARG_PARAM = "login";
     private String paramUsername;
 
@@ -52,7 +55,7 @@ public class LoginFragment extends DialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
+        final Context context = getContext();
         final View rootView = inflater.inflate(R.layout.fragment_login, container, false);
 
         final Switch switchLogin = rootView.findViewById(R.id.switch_login);
@@ -68,7 +71,7 @@ public class LoginFragment extends DialogFragment {
 
         final EditText editTextUsername = rootView.findViewById(R.id.edit_text_login_name);
 
-        if (paramUsername != null) {
+        if (paramUsername != null && !paramUsername.equals("")) {
             switchLogin.setChecked(false);
             switchLogin.setText(R.string.login_existing_account);
             editTextUsername.setText(paramUsername);
@@ -99,14 +102,24 @@ public class LoginFragment extends DialogFragment {
                     if (newUser) { // Register new user?
                         response = dataAccessObject.userRegister();
 
-                        if (response != null) {
+                        if (response != null) { // Ensure some type of response was received
                             if (response.startsWith(DataAccessObject.RESPONSE_MESSAGE_ERROR_PREFIX)) {
                                 textViewLogin.setText(response);
                             } else { // User has been successfully registered
                                 textViewLogin.setText("Registered... Logging In");
                                 response = dataAccessObject.userLogin();
-                                if (response!=null) { // Received a token key
 
+                                if (response != null) { // Received a token key, so store the username, grant user access to app
+                                    if (context != null) {
+                                        SharedPreferences sharedPreferences = context.getSharedPreferences(getString(R.string.app_name), Context.MODE_PRIVATE);
+                                        SharedPreferences.Editor appStoredPrefsEditor = sharedPreferences.edit();
+                                        appStoredPrefsEditor.putString(SHARED_PREFERENCES_USERNAME, DataAccessObject.loginUsername);
+                                        appStoredPrefsEditor.apply();
+                                    }
+                                    MainActivity.loginFragment.dismiss();
+
+                                } else { // Null returned from the network call
+                                    textViewLogin.setText("Invalid Username or Password. Try again.");
                                 }
                             }
                         } else { // Null returned from the network call
@@ -115,8 +128,19 @@ public class LoginFragment extends DialogFragment {
                     } else { // Login existing user
                         textViewLogin.setText("Logging In");
                         response = dataAccessObject.userLogin();
-                        if (response!=null) { // Received a token key
 
+                        if (response != null) { // Received a token key, so store the username, grant user access to app
+                            if (context != null) {
+                                SharedPreferences sharedPreferences = context.getSharedPreferences(getString(R.string.app_name), Context.MODE_PRIVATE);
+                                SharedPreferences.Editor appStoredPrefsEditor = sharedPreferences.edit();
+                                appStoredPrefsEditor.putString(SHARED_PREFERENCES_USERNAME, DataAccessObject.loginUsername);
+                                appStoredPrefsEditor.apply();
+                            }
+
+                            MainActivity.loginFragment.dismiss();
+
+                        } else { // Null returned from the network call
+                            textViewLogin.setText("Invalid Username or Password. Try again.");
                         }
                     }
                 } else { // User clicked Login button without typing anything into the EditText fields

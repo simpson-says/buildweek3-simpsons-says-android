@@ -7,7 +7,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 
 import java.util.ArrayList;
 
@@ -18,19 +21,33 @@ public class Search extends AppCompatActivity implements DetailsFragment.OnFragm
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         final Context context = this;
+        final View view = this.getCurrentFocus();
 
         Button buttonSearch = findViewById(R.id.button_search_search);
         buttonSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                EditText editTextSearchEntry = findViewById(R.id.edit_text_search_entry);
+                String searchText = editTextSearchEntry.getText().toString();
+
                 DataAccessObject dao = new DataAccessObject();
-                ArrayList<Quote> quoteArrayList = dao.getHardCodedData();
+                ArrayList<Quote> quoteArrayList = dao.searchForQuotes(searchText);
                 DetailsFragment.OnFragmentInteractionListener interactionListener = (DetailsFragment.OnFragmentInteractionListener) context; //TODO: Delete this and get proper handle
                 RecyclerView recyclerView = findViewById(R.id.recycler_view_search_results);
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
                 SearchListAdapter searchListAdapter = new SearchListAdapter(quoteArrayList, interactionListener); //TODO: Replace this variable with the proper interactionListener
                 recyclerView.setAdapter(searchListAdapter);
                 recyclerView.setHasFixedSize(true);
+
+//                InputMethodManager inputManager = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+//                inputManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+
+                //editTextSearchEntry.setInputType(0);
+//                if (view != null) {
+//                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+//                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+//                }
+                //getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
             }
         });
     }
