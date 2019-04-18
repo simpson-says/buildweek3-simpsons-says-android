@@ -2,6 +2,9 @@
 
 In collaboration with many hard-working students at Lambda School, I have built a little Android application which pulls data from a backend server.
 
+## Screenshot of Main Page
+<img src="https://github.com/simpson-says/buildweek3-simpsons-says-android/blob/master/Screenshot_Simpsons_Says.png?raw=true" width="275">
+
 ## What Does the App Do?
 
 This app's main purpose is to give users the ability to read quotes from The Simpsons based upon a selected theme.
