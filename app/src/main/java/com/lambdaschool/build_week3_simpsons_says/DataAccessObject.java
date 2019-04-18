@@ -140,6 +140,18 @@ public class DataAccessObject {
                     e.printStackTrace();
                 }
 
+                ArrayList<Integer> userFavoriteIds = new ArrayList<>();
+                JSONArray jsonArray = null;
+                try {
+                    jsonArray = jsonObject.getJSONArray("favorites");
+
+                    for (int i = 0; i < jsonArray.length(); ++i) {
+                        userFavoriteIds.add(jsonArray.getInt(i));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
                 if (responseToken != null)
                     messageToReturn = RESPONSE_MESSAGE_SUCCESS_PREFIX + responseToken;
                 else if (responseMessage != null)
@@ -289,7 +301,7 @@ public class DataAccessObject {
                 returnedJsonAsString = NetworkAdapter.httpRequest(URL_SIMPSONS_SAYS_BASE + URL_SIMPSONS_SAYS_FAVORITES, NetworkAdapter.REQUEST_POST, jsonObject, headerPropertiesHashMap);
 
                 try {
-                    successfullyAdded = jsonObject.getBoolean("Favorite-Added");
+                    successfullyAdded = jsonObject.getBoolean("Favorite-Modified");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
