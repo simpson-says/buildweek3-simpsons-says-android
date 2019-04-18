@@ -25,7 +25,7 @@
             android:layout_margin="1dp"
             android:adjustViewBounds="false"
             android:contentDescription="Portrait of character"
-            tools:srcCompat="@drawable/placeholder" />
+            tools:srcCompat="@drawable/default0" />
 
         <TextView
             android:id="@+id/text_view_element_quote"

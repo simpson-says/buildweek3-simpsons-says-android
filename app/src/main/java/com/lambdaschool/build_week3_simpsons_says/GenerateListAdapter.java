@@ -1,5 +1,6 @@
 package com.lambdaschool.build_week3_simpsons_says;
 
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,11 +12,11 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 public class GenerateListAdapter extends RecyclerView.Adapter<GenerateListAdapter.ViewHolder> {
-    private ArrayList<Quote> quoteArrayList;
-    private DetailsFragment.OnFragmentInteractionListener interactionListener;
+    private ArrayList<Character> characterArrayList;
+    private GenerateFragment.OnFragmentInteractionListener interactionListener;
 
-    public GenerateListAdapter(ArrayList<Quote> quoteArrayList, DetailsFragment.OnFragmentInteractionListener interactionListener) {
-        this.quoteArrayList = quoteArrayList;
+    public GenerateListAdapter(ArrayList<Character> characterArrayList, GenerateFragment.OnFragmentInteractionListener interactionListener) {
+        this.characterArrayList = characterArrayList;
         this.interactionListener = interactionListener;
     }
 
@@ -27,32 +28,36 @@ public class GenerateListAdapter extends RecyclerView.Adapter<GenerateListAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
-        final Quote quote = quoteArrayList.get(position);
-        viewHolder.imageViewQuote.setImageResource(quote.getImage());
-        viewHolder.textViewQuote.setText(quote.toString());
+        final Character character = characterArrayList.get(position);
+        viewHolder.imageViewCharacter.setImageResource(character.getImage());
+        viewHolder.textViewCharacter.setText(character.toString());
+        viewHolder.textViewCharacter.setTextSize(30);
+        viewHolder.textViewCharacter.setTypeface(Typeface.DEFAULT_BOLD);
+        viewHolder.textViewCharacter.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+
         viewHolder.viewParent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (interactionListener != null)
-                    interactionListener.onFragmentInteraction(quote);
+                    interactionListener.onFragmentInteraction(character);
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return quoteArrayList.size();
+        return characterArrayList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView imageViewQuote;
-        TextView textViewQuote;
+        ImageView imageViewCharacter;
+        TextView textViewCharacter;
         View viewParent;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            imageViewQuote = itemView.findViewById(R.id.image_view_element_portrait);
-            textViewQuote = itemView.findViewById(R.id.text_view_element_quote);
+            imageViewCharacter = itemView.findViewById(R.id.image_view_element_portrait);
+            textViewCharacter = itemView.findViewById(R.id.text_view_element_quote);
             viewParent = itemView.findViewById(R.id.card_view_parent);
         }
     }

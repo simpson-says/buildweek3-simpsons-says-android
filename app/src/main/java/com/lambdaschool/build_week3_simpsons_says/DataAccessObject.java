@@ -242,6 +242,54 @@ public class DataAccessObject {
         return quoteArrayList;
     }
 
+    public ArrayList<String> generateQuotesByCharacter(final String characterToGenerate) {
+        final ArrayList<String> stringArrayList = new ArrayList<>();
+
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+
+                Quote quote = null;
+                JSONObject jsonObject = null;
+                JSONArray jsonArray = null;
+
+                try {
+                    jsonObject = new JSONObject();
+                    jsonObject.put("genChar", characterToGenerate);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                headerPropertiesHashMap = new HashMap<>();
+                headerPropertiesHashMap.put("Content-Type", "application/json");
+                returnedJsonAsString = NetworkAdapter.httpRequest(URL_SIMPSONS_SAYS_BASE + URL_SIMPSONS_SAYS_GENERATE, NetworkAdapter.REQUEST_POST, jsonObject, headerPropertiesHashMap);
+
+                try {
+
+                    jsonArray = new JSONArray(returnedJsonAsString);
+
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        jsonObject = jsonArray.getJSONObject(i);
+                        stringArrayList.add(jsonObject.getString("quote"));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        Thread thread = new Thread(runnable);
+        thread.start();
+
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return stringArrayList;
+    }
+
     public ArrayList<Quote> getHardCodedData() {
         ArrayList<Quote> quoteArrayList = new ArrayList<>();
         String[] mockDataStringArray = MOCK_CSV.split("\n");

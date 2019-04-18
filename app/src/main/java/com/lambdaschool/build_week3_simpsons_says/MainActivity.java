@@ -31,11 +31,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
         }
         loginFragment.setStyle(DialogFragment.STYLE_NORMAL, 0);
         loginFragment.setCancelable(false);
-/*        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.linear_layout_fragment_search, loginFragment)
-                .addToBackStack(null)
-                .commit();*/
-        loginFragment.show(getSupportFragmentManager(), LoginFragment.ARG_PARAM);
+        //loginFragment.show(getSupportFragmentManager(), LoginFragment.ARG_PARAM);
 
 
         Button buttonSearch = findViewById(R.id.button_search_activity);
