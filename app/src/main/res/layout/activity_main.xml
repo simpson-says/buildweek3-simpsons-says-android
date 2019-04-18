@@ -19,17 +19,16 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/logo_bubble" />
 
-    <TextView
-        android:id="@+id/text_view_random_quote"
+    <ImageView
+        android:id="@+id/imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        android:text="No time. I'll just deduce where you were from a list of possibilities in my head. ~Homer Simpson"
+        android:background="@drawable/background"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/image_view_logo" />
+        app:layout_constraintTop_toTopOf="parent" />
+
 
     <Button
         android:id="@+id/button_search_activity"
@@ -38,6 +37,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginBottom="100dp"
         android:text="Search"
+        android:backgroundTint="#FFEB3B"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -47,6 +47,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="100dp"
         android:text="Generate"
+        android:backgroundTint="#FFFFFF"
         app:layout_constraintEnd_toStartOf="@+id/button_favorites_activity"
         app:layout_constraintStart_toEndOf="@+id/button_search_activity"
         app:layout_constraintBottom_toBottomOf="parent" />
@@ -58,7 +59,18 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="100dp"
         android:text="Favorites"
+        android:backgroundTint="#FF0000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/text_view_random_quote"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="No time. I'll just deduce where you were from a list of possibilities in my head. ~Homer Simpson"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
 </android.support.constraint.ConstraintLayout>
