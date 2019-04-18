@@ -20,36 +20,10 @@ public class DataAccessObject {
     private HashMap<String, String> headerPropertiesHashMap;
     private String returnedJsonAsString;
     private String messageToReturn;
-
+    private boolean successfullyAdded;
+    private static String token;
     static String loginUsername;
     static String loginPassword;
-    static String token;
-
-
-
-    /* ENDPOINTS
-    Post to /register
-    Params: Username and password
-
-    Post to /login
-    Params: Username and password
-
-    Get to /favorites
-    You will retrieve all these from the db and put them in array for sending out, but not for returning to user
-    Header should provide username from auth unless you want this done different
-
-    Post to /favorites
-    Params: an id number to add to the users favorites
-    header should provide username from auth unless you want this done different
-
-    Post to /search
-    Params: a string to search
-    This should be behind an auth header
-
-    (THIS PART IS STRETCH DON'T WORRY ABOUT THIS UNTIL THE END)
-    Post to /generator
-    params: a string to pass on
-    This should be behind an auth header*/
 
     public String userRegister() {
         messageToReturn = null;
@@ -290,6 +264,55 @@ public class DataAccessObject {
         }
 
         return quoteArrayList;
+    }
+
+    public boolean setUserFavorites(final int idToAdd) {
+        successfullyAdded = false;
+
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+
+                JSONObject jsonObject = null;
+                JSONArray jsonArray = null;
+
+                try {
+                    jsonObject = new JSONObject();
+                    jsonObject.put("quoteID", idToAdd);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                headerPropertiesHashMap = new HashMap<>();
+                headerPropertiesHashMap.put("Content-Type", "application/json");
+                headerPropertiesHashMap.put("Authorization", token);
+                returnedJsonAsString = NetworkAdapter.httpRequest(URL_SIMPSONS_SAYS_BASE + URL_SIMPSONS_SAYS_FAVORITES, NetworkAdapter.REQUEST_POST, jsonObject, headerPropertiesHashMap);
+
+                try {
+                    successfullyAdded = jsonObject.getBoolean("Favorite-Added");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                String responseMessage = null;
+                try {
+                    responseMessage = jsonObject.getString("message");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        Thread thread = new Thread(runnable);
+        thread.start();
+
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return successfullyAdded;
     }
 
     public ArrayList<String> generateQuotesByCharacter(final String characterToGenerate) {
