@@ -1,13 +1,12 @@
 package com.lambdaschool.build_week3_simpsons_says;
 
-import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,6 +16,7 @@ import java.util.ArrayList;
 public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.ViewHolder> {
     private ArrayList<Quote> quoteArrayList;
     private DetailsFragment.OnFragmentInteractionListener interactionListener;
+    private int lastPositionAnimated = -1;
 
     public SearchListAdapter(ArrayList<Quote> quoteArrayList, DetailsFragment.OnFragmentInteractionListener interactionListener) {
         this.quoteArrayList = quoteArrayList;
@@ -56,6 +56,12 @@ public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.Vi
                 return false;
             }
         });
+
+        if (position > lastPositionAnimated) {
+            Animation animation = AnimationUtils.loadAnimation(viewHolder.viewParent.getContext(), android.R.anim.slide_in_left);
+            viewHolder.viewParent.startAnimation(animation);
+            lastPositionAnimated = position;
+        }
     }
 
     @Override
