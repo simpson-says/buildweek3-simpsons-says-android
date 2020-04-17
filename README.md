@@ -1,6 +1,6 @@
 # Simpsons Says
 
-In collaboration with many hard-working students at Lambda School, I have built an Android application which pulls data from a backend server.
+I have built an Android application which pulls data from a backend server (built by teammates).
 
 ### What Does the App Do?
 
