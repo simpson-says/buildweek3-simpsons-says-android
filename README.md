@@ -14,7 +14,7 @@ This app's main purpose is to give users the ability to read quotes from The Sim
 The app is geared to people who are familiar with the TV series and for people who enjoy finding witty comments.
 
 ### Instructions
-1. Download the [.APK](https://github.com/simpson-says/buildweek3-simpsons-says-android/blob/master/app/build/outputs/apk/release/app-release-unsigned.apk) to an Android device (or an Emulator)
+1. Download the [.apk file](https://github.com/simpson-says/buildweek3-simpsons-says-android/blob/master/simpsons-says.apk) to an Android device (or an Emulator)
 2. Install it on the device
 3. Load it up
 4. The first time you run it, you will want to Register a new account
