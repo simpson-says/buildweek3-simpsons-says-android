@@ -1,9 +1,8 @@
 package com.lambdaschool.build_week3_simpsons_says;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
 public class Character implements Serializable {
     private String name;

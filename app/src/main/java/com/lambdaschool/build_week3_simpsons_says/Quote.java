@@ -1,6 +1,6 @@
 package com.lambdaschool.build_week3_simpsons_says;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
